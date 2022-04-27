@@ -14,4 +14,4 @@ blogsRouter.post("/", (request, response) => {
   });
 });
 
-module.exports = blogsRouter;
+module.exports = Blog;
