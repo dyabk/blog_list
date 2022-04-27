@@ -1,0 +1,11 @@
+{
+  "name": "bloglist_app",
+  "version": "0.0.1",
+  "description": "A blog list application that allows users to save information about interesting blogs that they have found on the Internet.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \\\"Error: no test specified\\\" && exit 1"
+  },
+  "author": "Dzmitry Yabkevich",
+  "license": "MIT"
+}
