@@ -1,4 +1,5 @@
 const blogsRouter = require("express").Router();
+const Blog = require("./models/blog");
 
 blogsRouter.get("/", (request, response) => {
   Blog.find({}).then((blogs) => {
@@ -14,4 +15,4 @@ blogsRouter.post("/", (request, response) => {
   });
 });
 
-module.exports = Blog;
+module.exports = blogsRouter;
