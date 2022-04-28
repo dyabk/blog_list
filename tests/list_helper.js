@@ -1,4 +1,4 @@
-const dummy = "../utils/list_helper";
+const list_helper = "../utils/list_helper";
 
 test("dummy returns one", () => {
   const blogs = [];
