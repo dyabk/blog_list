@@ -8,7 +8,7 @@ test("dummy returns one", () => {
 });
 
 describe("total likes", () => {
-  const likesWithOneBlog = [
+  const listWithOneBlog = [
     {
       _id: "5a422aa71b54a676234d17f8",
       title: "Go To Statement Considered Harmful",
