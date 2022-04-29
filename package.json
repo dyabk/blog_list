@@ -4,9 +4,10 @@
   "description": "A blog list application that allows users to save information about interesting blogs that they have found on the Internet.",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node index.js",
-    "dev": "NODE_ENV=development nodemon index.js",
-    "test": "NODE_ENV=test jest --verbose --runInBand"
+    "start": "cross-env NODE_ENV=production node index.js",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose --runInBand",
+    "test-prepare": "cross-env NODE_ENV=test node index.js"
   },
   "author": "Dzmitry Yabkevich",
   "license": "MIT",
@@ -19,7 +20,8 @@
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
-    "jest": "^28.0.2"
+    "jest": "^28.0.2",
+    "supertest": "^6.2.3"
   },
   "jest": {
     "testEnvironment": "node"
