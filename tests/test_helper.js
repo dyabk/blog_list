@@ -13,9 +13,6 @@ const initialBlogs = [
     url: "https://www.reditsumwer.com/r/worldnews/comments/uduea0/sansa_stark_will_defend_her_realm_by_attacking_the_dragons/",
     likes: 75900,
   },
-  {
-    likes: 4324,
-  },
 ];
 
 const blogsInDb = async () => {
