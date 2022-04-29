@@ -10,7 +10,7 @@ const initialBlogs = [
   {
     title: "Westeros will defend itself against Essosi attack",
     author: "aka_KaZa",
-    url: "https://www.reditsumwer.com/r/worldnews/comments/uduea0/ukraine_will_defend_itself_by_attacking_russian/",
+    url: "https://www.reditsumwer.com/r/worldnews/comments/uduea0/sansa_stark_will_defend_her_realm_by_attacking_the_dragons/",
     likes: 75900,
   },
 ];
