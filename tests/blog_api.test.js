@@ -68,10 +68,22 @@ test("if the likes property is missing, it defaults to 0", async () => {
   expect(response.body.likes).toBe(0);
 });
 
-test("a blog without the title will not be added to the database", async () => {
+test("a blog without the title is not added", async () => {
   const newBlog = {
     author: "Dimitri",
     url: "https://agar.io",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogs = await helper.blogsInDb();
+  expect(blogs).toHaveLength(helper.initialBlogs.length);
+});
+
+test("a blog without the url is not added", async () => {
+  const newBlog = {
+    author: "Dimitri",
+    title: "Test",
   };
 
   await api.post("/api/blogs").send(newBlog).expect(400);
