@@ -6,8 +6,8 @@ blogsRouter.get("/", async (request, response) => {
   response.json(blogs);
 });
 
-blogsRouter.get("/:id", (request, response) => {
-  const blog = await Blog.findById(request.params.id)
+blogsRouter.get("/:id", async (request, response) => {
+  const blog = await Blog.findById(request.params.id);
   if (blog) {
     response.json(blog);
   } else {
@@ -15,7 +15,7 @@ blogsRouter.get("/:id", (request, response) => {
   }
 });
 
-blogsRouter.post("/", (request, response) => {
+blogsRouter.post("/", async (request, response) => {
   const body = request.body;
   const blog = new Blog({
     title: body.title,
@@ -24,7 +24,7 @@ blogsRouter.post("/", (request, response) => {
     likes: body.likes,
   });
 
-  const savedBlog = await blog.save()
+  const savedBlog = await blog.save();
   response.status(201).json(savedBlog.toJSON());
 });
 

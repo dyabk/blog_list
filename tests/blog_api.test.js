@@ -31,7 +31,7 @@ test("every blog has a property named id", async () => {
   }
 });
 
-test("successfully creates a new blog post", async () => {
+test("POST request successfully creates a new blog post", async () => {
   const newBlog = {
     _id: "5a422aa71b54a676234d17f8",
     title: "Go To Statement Considered Harmful",
@@ -52,6 +52,20 @@ test("successfully creates a new blog post", async () => {
 
   const contents = blogsAtEnd.map((b) => b.title);
   expect(contents).toContain("Go To Statement Considered Harmful");
+});
+
+test("if the likes property is missing, it defaults to 0", async () => {
+  const newBlog = {
+    _id: "12322aa71c54a606234d17f8",
+    title: "Go To Statement Considered Harmful",
+    author: "Edsger W. Dijkstra",
+    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    __v: 0,
+  };
+
+  const response = await api.post("/api/blogs").send(newBlog);
+
+  expect(response.body.likes).toBe(0);
 });
 
 afterAll(() => {
