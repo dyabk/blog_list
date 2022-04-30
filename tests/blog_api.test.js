@@ -103,8 +103,27 @@ describe("deletion of a blog", () => {
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
 
-    const contents = blogsAtEnd.map((blog) => blog.content);
-    expect(contents).not.toContain(blogToDelete.content);
+    const ids = blogsAtEnd.map((blog) => blog.id);
+    expect(ids).not.toContain(blogToDelete.id);
+  });
+});
+
+describe("updating a blog", () => {
+  test("returns status code 200 if successful", async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+
+    const updatedBlog = {
+      title: "Hello world!",
+      author: "Dimitri",
+      url: "https://non-existing.url",
+      likes: 20,
+    };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200);
   });
 });
 
