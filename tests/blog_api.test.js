@@ -25,7 +25,6 @@ test("returns in the JSON format", async () => {
 
 test("every blog has a property named id", async () => {
   const response = await api.get("/api/blogs");
-
   for (const blog of response.body) {
     expect(blog.id).toBeDefined();
   }
@@ -47,10 +46,11 @@ test("POST request successfully creates a new blog post", async () => {
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const blogsAtEnd = await helper.blogsInDb();
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+  const blogs = await helper.blogsInDb();
 
-  const contents = blogsAtEnd.map((b) => b.title);
+  expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
+
+  const contents = blogs.map((b) => b.title);
   expect(contents).toContain("Go To Statement Considered Harmful");
 });
 
@@ -66,6 +66,18 @@ test("if the likes property is missing, it defaults to 0", async () => {
   const response = await api.post("/api/blogs").send(newBlog);
 
   expect(response.body.likes).toBe(0);
+});
+
+test("a blog without the title will not be added to the database", async () => {
+  const newBlog = {
+    author: "Dimitri",
+    url: "https://agar.io",
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogs = await helper.blogsInDb();
+  expect(blogs).toHaveLength(helper.initialBlogs.length);
 });
 
 afterAll(() => {
