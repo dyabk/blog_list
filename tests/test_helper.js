@@ -1,6 +1,19 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
 
+const initialUsers = [
+  {
+    username: "scasa",
+    name: "Santiago Casa",
+    password: '!U"(AQM9]b4++FH;',
+  },
+  {
+    username: "agarcia",
+    name: "Alejandro Garcia",
+    password: "BT!P>vE6~T/3L,V",
+  },
+];
+
 const initialBlogs = [
   {
     title: "who can relate?",
@@ -28,6 +41,7 @@ const usersInDb = async () => {
 
 module.exports = {
   initialBlogs,
+  initialUsers,
   blogsInDb,
   usersInDb,
 };

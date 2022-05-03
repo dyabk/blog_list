@@ -16,6 +16,12 @@ describe("when there is a single user in the database", () => {
     await user.save();
   });
 
+  test("the user is returned", async () => {
+    const response = await api.get("/api/users");
+
+    expect(response.body).toHaveLength(1);
+  });
+
   test("creation succeeds with a new username", async () => {
     const usersAtStart = await helper.usersInDb();
 
@@ -101,4 +107,8 @@ describe("when there is a single user in the database", () => {
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
   });
+});
+
+afterAll(() => {
+  mongoose.connection.close();
 });
