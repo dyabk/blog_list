@@ -10,6 +10,25 @@ usersRouter.get("/", async (request, response) => {
 usersRouter.post("/", async (request, response) => {
   const { username, name, password } = request.body;
 
+  const existingUser = await User.findOne({ username });
+  if (existingUser) {
+    return response.status(400).json({
+      error: "expected `username` to be unique",
+    });
+  }
+
+  if (!password) {
+    return response.status(400).json({
+      error: "Path `password` is required",
+    });
+  }
+
+  if (password.length < 3) {
+    return response.status(400).json({
+      error: "The password is too short",
+    });
+  }
+
   const saltRounds = 10;
   const passwordHash = await bcrypt.hash(password, saltRounds);
 

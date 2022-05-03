@@ -65,11 +65,11 @@ describe("when there is a single user in the database", () => {
     expect(usersAtEnd).toEqual(usersAtStart);
   });
 
-  test("creation fails with statuscode 400 if username is too short (length < 4)", async () => {
+  test("creation fails with statuscode 400 if username is too short (length < 3)", async () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "foo",
+      username: "fo",
       name: "Superuser",
       password: "washincoln6771",
     };
@@ -81,7 +81,7 @@ describe("when there is a single user in the database", () => {
       .expect("Content-Type", /application\/json/);
 
     expect(result.body.error).toContain(
-      `is shorter than the minimum allowed length`
+      `Path \`username\` (\`${newUser.username}\`) is shorter than the minimum allowed length`
     );
 
     const usersAtEnd = await helper.usersInDb();
@@ -103,6 +103,47 @@ describe("when there is a single user in the database", () => {
       .expect("Content-Type", /application\/json/);
 
     expect(result.body.error).toContain("Path `username` is required");
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
+
+  test("creation fails with statuscode 400 if password is missing", async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: "ntesla",
+      name: "Superuser",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain("Path `password` is required");
+
+    const usersAtEnd = await helper.usersInDb();
+    expect(usersAtEnd).toEqual(usersAtStart);
+  });
+
+  test("creation fails with statuscode 400 if password is too short (length < 3)", async () => {
+    const usersAtStart = await helper.usersInDb();
+
+    const newUser = {
+      username: "ntesla",
+      name: "Superuser",
+      password: "rr",
+    };
+
+    const result = await api
+      .post("/api/users")
+      .send(newUser)
+      .expect(400)
+      .expect("Content-Type", /application\/json/);
+
+    expect(result.body.error).toContain(`The password is too short`);
 
     const usersAtEnd = await helper.usersInDb();
     expect(usersAtEnd).toEqual(usersAtStart);
