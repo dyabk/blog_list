@@ -2,13 +2,32 @@ const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
 const api = supertest(app);
-const Blog = require("../models/blog");
 const helper = require("./test_helper");
+const bcrypt = require("bcrypt");
+
+const Blog = require("../models/blog");
+const User = require("../models/user");
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  await Blog.insertMany(helper.initialBlogs);
+  await Blog.insertMany(helper.blogList);
 });
+
+let token = null;
+beforeAll(async () => {
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash("sekret", 10);
+  const user = new User({ username: "root", passwordHash });
+
+  await user.save();
+
+  const response = await api
+    .post("/api/login")
+    .send({ username: "root", password: "sekret" });
+
+  token = response.body.token;
+}, 100000);
 
 describe("when there are blogs saved", () => {
   test("blogs are returned in the JSON format", async () => {
@@ -21,7 +40,7 @@ describe("when there are blogs saved", () => {
   test("all of the blogs are returned", async () => {
     const response = await api.get("/api/blogs");
 
-    expect(response.body).toHaveLength(helper.initialBlogs.length);
+    expect(response.body).toHaveLength(helper.blogList.length);
   });
 
   test("all blogs have the id property", async () => {
@@ -33,7 +52,31 @@ describe("when there are blogs saved", () => {
 });
 
 describe("addition of a new blog", () => {
-  test("succeeds with valid data", async () => {
+  test("succeeds with valid data and authorization", async () => {
+    const newBlog = {
+      title: "Hello world!",
+      author: "Dimitri",
+      url: "https://non-existing.url",
+      likes: 5,
+    };
+
+    await api
+      .post("/api/blogs")
+      .set("Authorization", "bearer " + token)
+      .send(newBlog)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    let blogs = await Blog.find({});
+    blogs = blogs.map((blog) => blog.toJSON());
+
+    expect(blogs).toHaveLength(helper.blogList.length + 1);
+
+    const titles = blogs.map((blog) => blog.title);
+    expect(titles).toContain("Hello world!");
+  });
+
+  test("fails without proper authorization", async () => {
     const newBlog = {
       title: "Hello world!",
       author: "Dimitri",
@@ -44,14 +87,14 @@ describe("addition of a new blog", () => {
     await api
       .post("/api/blogs")
       .send(newBlog)
-      .expect(201)
+      .expect(401)
       .expect("Content-Type", /application\/json/);
 
     const blogs = await helper.blogsInDb();
-    expect(blogs).toHaveLength(helper.initialBlogs.length + 1);
+    expect(blogs).toHaveLength(helper.blogList.length);
 
     const titles = blogs.map((blog) => blog.title);
-    expect(titles).toContain("Hello world!");
+    expect(titles).not.toContain("Hello world!");
   });
 
   test("fails when a blog has no title", async () => {
@@ -61,10 +104,14 @@ describe("addition of a new blog", () => {
       likes: 10,
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", "bearer " + token)
+      .send(newBlog)
+      .expect(400);
 
-    const blogs = await helper.blogsInDb();
-    expect(blogs).toHaveLength(helper.initialBlogs.length);
+    let blogs = await helper.blogsInDb();
+    expect(blogs).toHaveLength(helper.blogList.length);
   });
 
   test("fails when a blog has no url", async () => {
@@ -74,10 +121,14 @@ describe("addition of a new blog", () => {
       likes: 15,
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    await api
+      .post("/api/blogs")
+      .set("Authorization", "bearer " + token)
+      .send(newBlog)
+      .expect(400);
 
     const blogs = await helper.blogsInDb();
-    expect(blogs).toHaveLength(helper.initialBlogs.length);
+    expect(blogs).toHaveLength(helper.blogList.length);
   });
 
   test("defaults the likes property to 0 if it is missing", async () => {
@@ -87,7 +138,10 @@ describe("addition of a new blog", () => {
       url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     };
 
-    const response = await api.post("/api/blogs").send(newBlog);
+    const response = await api
+      .post("/api/blogs")
+      .set("Authorization", "bearer " + token)
+      .send(newBlog);
 
     expect(response.body.likes).toBe(0);
   });
@@ -96,12 +150,30 @@ describe("addition of a new blog", () => {
 describe("deletion of a blog", () => {
   test("returns status code 204 if id is valid", async () => {
     const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    let blogToDelete = {
+      title: "Hello world!",
+      author: "Dimitri",
+      url: "https://non-existing.url",
+      likes: 5,
+    };
+
+    const response = await api
+      .post("/api/blogs")
+      .set("Authorization", "bearer " + token)
+      .send(blogToDelete)
+      .expect(201)
+      .expect("Content-Type", /application\/json/);
+
+    blogToDelete = response.body;
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("Authorization", "bearer " + token)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length);
 
     const ids = blogsAtEnd.map((blog) => blog.id);
     expect(ids).not.toContain(blogToDelete.id);

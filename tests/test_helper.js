@@ -14,7 +14,7 @@ const initialUsers = [
   },
 ];
 
-const initialBlogs = [
+const blogList = [
   {
     title: "who can relate?",
     author: "codeNearly",
@@ -26,6 +26,12 @@ const initialBlogs = [
     author: "aka_KaZa",
     url: "https://www.reditsumwer.com/r/worldnews/comments/uduea0/sansa_stark_will_defend_her_realm_by_attacking_the_dragons/",
     likes: 75900,
+  },
+  {
+    title: "Is the end of console gaming coming??",
+    author: "ddyNoD",
+    url: "https://www.bdffdbw.com/peezt/s-thfeewend-of-gafdng-otiVqSwA",
+    likes: 23,
   },
 ];
 
@@ -40,7 +46,7 @@ const usersInDb = async () => {
 };
 
 module.exports = {
-  initialBlogs,
+  blogList,
   initialUsers,
   blogsInDb,
   usersInDb,
