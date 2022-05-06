@@ -1,5 +1,4 @@
 import React from "react";
-import "../index.css";
 
 const Notification = ({ isError, message }) => {
   if (message === null) {
