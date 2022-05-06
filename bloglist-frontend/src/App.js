@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -23,6 +24,11 @@ const App = () => {
       setUser(user);
       setUsername("");
       setPassword("");
+
+      window.localStorage.setItem(
+        "loggedBloglistappUser",
+        JSON.stringify(user)
+      );
     } catch (exception) {
       setError(true);
       setMessage("Wrong credentials");
@@ -33,9 +39,19 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedBloglistappUser");
+    setUser(null);
+    setMessage("User logged out");
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
+  };
+
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
+      <Notification isError={error} message={message} />
       <form onSubmit={handleLogin}>
         <div>
           <input
@@ -65,7 +81,12 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <p>{user.name} logged in</p>
+      <p>
+        {user.name} logged in
+        <button type="button" onClick={handleLogout}>
+          logout
+        </button>
+      </p>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
