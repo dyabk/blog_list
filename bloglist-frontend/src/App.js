@@ -28,6 +28,17 @@ const App = () => {
     }
   }, []);
 
+  const printMessage = (isError, text) => {
+    if (isError) {
+      setError(true);
+    }
+    setMessage(text);
+    setTimeout(() => {
+      setMessage(null);
+      setError(false);
+    }, 5000);
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -42,22 +53,14 @@ const App = () => {
         JSON.stringify(user)
       );
     } catch (exception) {
-      setError(true);
-      setMessage("Wrong credentials");
-      setTimeout(() => {
-        setError(false);
-        setMessage(null);
-      }, 5000);
+      printMessage(true, "Wrong credentials");
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistappUser");
     setUser(null);
-    setMessage("User logged out");
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
+    printMessage(false, "User logged out");
   };
 
   const addBlog = async (event) => {
@@ -70,6 +73,14 @@ const App = () => {
     };
 
     const response = await blogService.create(newBlog);
+    if (response.status === 201) {
+      printMessage(false, `A new blog ${title} by ${author} added`);
+      setTitle("");
+      setAuthor("");
+      setUrl("");
+    } else {
+      printMessage(true, "An error ocurred. Blog not added");
+    }
     setBlogs(blogs.concat(response.data));
   };
 
@@ -142,6 +153,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification isError={error} message={message} />
       <p>
         {user.name} logged in
         <button type="button" onClick={handleLogout}>
