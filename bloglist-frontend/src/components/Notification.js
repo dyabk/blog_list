@@ -1,6 +1,6 @@
 import React from "react";
 
-const Notification = ({ isError, message }) => {
+const Notification = ({ type, message }) => {
   if (message === null) {
     return null;
   }
@@ -15,7 +15,7 @@ const Notification = ({ isError, message }) => {
     padding: 10,
   };
 
-  if (isError) {
+  if (type === "Error") {
     style.color = "orange";
     style.fontSize = 25;
   }
