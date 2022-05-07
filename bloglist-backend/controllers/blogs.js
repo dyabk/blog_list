@@ -33,7 +33,6 @@ blogsRouter.post("/", async (request, response) => {
 
   let savedBlog = await blog.save();
   savedBlog = await savedBlog.populate("user", { username: 1, name: 1 });
-
   response.status(201).json(savedBlog);
 });
 

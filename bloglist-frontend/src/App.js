@@ -39,7 +39,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistAppUser");
     setUser(null);
-    handleNotification("Success", "User logged out");
+    handleNotification("Success", "Logged out");
   };
 
   const loginForm = () => (
@@ -52,10 +52,10 @@ const App = () => {
   );
 
   const blogForm = () => (
-    <Togglable buttonLabel="new post">
+    <Togglable buttonLabel="create new post">
       <CreateNew
         handleNotification={handleNotification}
-        isError={error}
+        error={error}
         message={message}
         blogs={blogs}
         setBlogs={setBlogs}
@@ -70,7 +70,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification isError={error} message={message} />
+      <Notification error={error} message={message} />
       <div>
         <p>
           {user.name} logged in

@@ -28,7 +28,7 @@ const LoginForm = (props) => {
   return (
     <div>
       <h2>Log in to application</h2>
-      <Notification isError={props.error} message={props.message} />
+      <Notification error={props.error} message={props.message} />
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor="input-username">Username</label>
@@ -51,7 +51,7 @@ const LoginForm = (props) => {
           />
         </div>
         <button id="button-login" type="submit">
-          Login
+          login
         </button>
       </form>
     </div>
