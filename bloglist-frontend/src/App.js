@@ -8,8 +8,6 @@ const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState(null);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -37,24 +35,6 @@ const App = () => {
       setMessage(null);
       setError(false);
     }, 5000);
-  };
-
-  const handleLogin = async (event) => {
-    event.preventDefault();
-
-    try {
-      const user = await loginService.login({ username, password });
-      setUser(user);
-      setUsername("");
-      setPassword("");
-
-      window.localStorage.setItem(
-        "loggedBloglistappUser",
-        JSON.stringify(user)
-      );
-    } catch (exception) {
-      printMessage(true, "Wrong credentials");
-    }
   };
 
   const handleLogout = () => {
