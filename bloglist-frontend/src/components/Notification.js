@@ -1,7 +1,7 @@
 import React from "react";
 
-const Notification = ({ type, message }) => {
-  if (message === null) {
+const Notification = (props) => {
+  if (props.message === null) {
     return null;
   }
 
@@ -9,20 +9,15 @@ const Notification = ({ type, message }) => {
     background: "darkgray",
     borderRadius: 5,
     borderStyle: "solid",
-    color: "purple",
-    fontSize: 20,
+    color: props.isError ? "purple" : "orange",
+    fontSize: props.isError ? 20 : 25,
     marginBottom: 10,
     padding: 10,
   };
 
-  if (type === "Error") {
-    style.color = "orange";
-    style.fontSize = 25;
-  }
-
   return (
     <div className="notification" style={style}>
-      {message}
+      {props.message}
     </div>
   );
 };

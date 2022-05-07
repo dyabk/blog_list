@@ -31,9 +31,9 @@ const LoginForm = (props) => {
       <Notification isError={props.error} message={props.message} />
       <form onSubmit={handleLogin}>
         <div>
-          <label for="username-input">Username</label>
+          <label htmlFor="input-username">Username</label>
           <input
-            id="username-input"
+            id="input-username"
             name="Username"
             onChange={handleUsernameChange}
             type="text"
@@ -41,16 +41,16 @@ const LoginForm = (props) => {
           />
         </div>
         <div>
-          <label for="input-password">Password</label>
+          <label htmlFor="input-password">Password</label>
           <input
-            id="password-input"
+            id="input-password"
             name="Password"
             onChange={handlePasswordChange}
             type="password"
             value={password}
           />
         </div>
-        <button id="login-button" type="submit">
+        <button id="button-login" type="submit">
           Login
         </button>
       </form>
