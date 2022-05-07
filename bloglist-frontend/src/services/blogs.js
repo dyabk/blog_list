@@ -21,8 +21,10 @@ const create = async (blog) => {
     const response = await axios.post(baseUrl, blog, config);
     return response;
   } catch (error) {
-    message: "Error: Missing 'title' and/or 'url'";
-    status: 400;
+    return {
+      message: "Error: Missing 'title' and/or 'url'",
+      status: 400,
+    };
   }
 };
 
