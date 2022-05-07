@@ -21,20 +21,28 @@ const create = async (blog) => {
     const response = await axios.post(baseUrl, blog, config);
     return response;
   } catch (error) {
+    console.log(error.message);
     return {
-      message: "Error: Missing 'title' and/or 'url'",
+      message: "Couldn't create a post.",
       status: 400,
     };
   }
 };
 
-const update = async (blog) => {
+const update = async (id, updatedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
 
-  const response = await axios.put(`${baseUrl}/${blog.id}`, blog, config);
-  return response.data;
+  try {
+    const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config);
+    return response.data;
+  } catch (error) {
+    return {
+      message: `Error: Couldn't update blog ${id}`,
+      error: 400,
+    };
+  }
 };
 
 export default { getAll, create, update, setToken };

@@ -1,20 +1,13 @@
-import { useState, useEffect, useRef } from "react";
-import Blog from "./components/Blog";
+import { useState, useEffect } from "react";
 import blogService from "./services/blogs";
-import CreateNew from "./components/CreateNew";
+import Content from "./components/Content";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(false);
   const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistAppUser");
@@ -37,7 +30,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedBloglistAppUser");
+    window.localStorage.clear();
     setUser(null);
     handleNotification("Success", "Logged out");
   };
@@ -49,20 +42,6 @@ const App = () => {
       error={error}
       message={message}
     />
-  );
-
-  const createNewRef = useRef();
-
-  const blogForm = () => (
-    <Togglable buttonLabel="create new post" ref={createNewRef}>
-      <CreateNew
-        handleNotification={handleNotification}
-        error={error}
-        message={message}
-        blogs={blogs}
-        setBlogs={setBlogs}
-      />
-    </Togglable>
   );
 
   if (user === null) {
@@ -81,10 +60,7 @@ const App = () => {
           </button>
         </p>
       </div>
-      {blogForm()}
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
-      ))}
+      <Content error={error} handleNotification={handleNotification} />
     </div>
   );
 };

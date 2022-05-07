@@ -19,21 +19,27 @@ blogsRouter.get("/:id", async (request, response) => {
   }
 });
 
-blogsRouter.post("/", async (request, response) => {
+blogsRouter.post("/", async (request, response, next) => {
   if (!request.user) {
     return response.status(401).json({ error: "token missing or invalid" });
   }
 
-  const blog = new Blog(request.body);
   const user = request.user;
+  request.body.user = user._id.toString();
+  let blog = new Blog(request.body);
 
-  blog.user = user._id.toString();
   user.blogs = user.blogs.concat(blog._id);
-  await user.save();
 
-  let savedBlog = await blog.save();
-  savedBlog = await savedBlog.populate("user", { username: 1, name: 1 });
-  response.status(201).json(savedBlog);
+  await user.save();
+  await blog.save();
+
+  blog = await Blog.findById(blog.id).populate("user", {
+    username: 1,
+    name: 1,
+  });
+
+  console.log(blog);
+  response.status(201).json(blog);
 });
 
 blogsRouter.delete("/:id", async (request, response) => {

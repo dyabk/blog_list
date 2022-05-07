@@ -14,14 +14,16 @@ const CreateNew = (props) => {
     event.preventDefault();
 
     let newBlog = {
-      title,
-      author,
-      url,
+      title: title,
+      author: author,
+      url: url,
     };
 
     const response = await blogService.create(newBlog);
+    console.log(response);
 
     if (response.status === 201) {
+      console.log("response data: ", response.data);
       props.setBlogs(props.blogs.concat(response.data));
       props.handleNotification(
         "Success",
