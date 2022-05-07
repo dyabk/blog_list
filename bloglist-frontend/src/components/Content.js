@@ -7,8 +7,12 @@ import Togglable from "./Togglable";
 const Content = (props) => {
   const [blogs, setBlogs] = useState([]);
 
+  const setSortedBlogs = (blogs) => {
+    setBlogs(blogs.sort((a, b) => b.likes - a.likes));
+  };
+
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => setSortedBlogs(blogs));
   }, []);
 
   const addLike = async (id) => {
@@ -22,7 +26,9 @@ const Content = (props) => {
 
     try {
       const updatedBlog = await blogService.update(id, likedBlog);
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : updatedBlog)));
+      setSortedBlogs(
+        blogs.map((blog) => (blog.id !== id ? blog : updatedBlog))
+      );
     } catch (error) {
       props.handleNotification(
         "Error",
