@@ -19,14 +19,6 @@ const CreateNew = (props) => {
       url,
     };
 
-    if (title.length === 0 || url.length === 0) {
-      props.handleNotification(
-        "Error",
-        "A field or some fields are missing data."
-      );
-      return;
-    }
-
     const response = await blogService.create(newBlog);
 
     if (response.status === 201) {

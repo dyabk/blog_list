@@ -17,8 +17,13 @@ const create = async (blog) => {
     headers: { Authorization: token },
   };
 
-  const response = await axios.post(baseUrl, blog, config);
-  return response;
+  try {
+    const response = await axios.post(baseUrl, blog, config);
+    return response;
+  } catch (error) {
+    message: "Error: Missing 'title' and/or 'url'";
+    status: 400;
+  }
 };
 
 const update = async (blog) => {

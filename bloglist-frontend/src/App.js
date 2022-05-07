@@ -51,8 +51,10 @@ const App = () => {
     />
   );
 
+  const createNewRef = useRef();
+
   const blogForm = () => (
-    <Togglable buttonLabel="create new post">
+    <Togglable buttonLabel="create new post" ref={createNewRef}>
       <CreateNew
         handleNotification={handleNotification}
         error={error}
