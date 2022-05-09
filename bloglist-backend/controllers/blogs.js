@@ -51,17 +51,15 @@ blogsRouter.delete("/:id", async (request, response) => {
   const blog = await Blog.findById(request.params.id);
 
   if (blog.user.toString() !== user._id.toString()) {
-    console.log("failed");
     return response.status(401).json({ error: "access denied" });
   }
 
   user = await User.findById(user._id.toString());
-  console.log(user);
   user.blogs = user.blogs.filter((id) => id.toString() !== request.params.id);
-  console.log(user.blogs);
 
-  console.log(await user.save(), "2321");
-  console.log(await Blog.findByIdAndRemove(request.params.id), "221");
+  await user.save();
+  await Blog.findByIdAndDelete(request.params.id);
+
   response.status(204).end();
 });
 

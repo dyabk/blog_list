@@ -1,10 +1,22 @@
 import { useState } from "react";
 
-const Blog = ({ blog, handleLike }) => {
+const Blog = ({ blog, handleDelete, handleLike, user }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   const hideWhenVisible = { display: detailsVisible ? "none" : "" };
   const showWhenVisible = { display: detailsVisible ? "" : "none" };
+
+  const deleteButton = () => {
+    if (user.username != blog.user.username) {
+      return null;
+    }
+
+    return (
+      <div>
+        <button onClick={() => handleDelete(blog)}>delete</button>
+      </div>
+    );
+  };
 
   const blogStyle = {
     paddingTop: 10,
@@ -30,6 +42,8 @@ const Blog = ({ blog, handleLike }) => {
         <button onClick={() => handleLike(blog.id)}>like</button>
         <br />
         {blog.user.name}
+        <br />
+        {deleteButton()}
       </div>
     </div>
   );

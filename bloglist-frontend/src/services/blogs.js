@@ -21,10 +21,29 @@ const create = async (blog) => {
     const response = await axios.post(baseUrl, blog, config);
     return response;
   } catch (error) {
-    console.log(error.message);
     return {
-      message: "Couldn't create a post.",
+      message: "Error: Couldn't create a post.",
       status: 400,
+    };
+  }
+};
+
+const _delete = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  };
+
+  console.log("Started deletion");
+
+  try {
+    console.log("trying");
+    const response = await axios.delete(`${baseUrl}/${id}`, config);
+    console.log(response);
+    return response;
+  } catch (error) {
+    return {
+      message: `Error: Couldn't delete blog ${id}`,
+      error: 400,
     };
   }
 };
@@ -45,4 +64,4 @@ const update = async (id, updatedBlog) => {
   }
 };
 
-export default { getAll, create, update, setToken };
+export default { getAll, create, update, setToken, _delete };

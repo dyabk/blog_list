@@ -37,6 +37,33 @@ const Content = (props) => {
     }
   };
 
+  const deleteBlog = async (blog) => {
+    const confirmation = window.confirm(
+      `Remove blog ${blog.title} by ${blog.author}?`
+    );
+
+    if (!confirmation) {
+      return;
+    }
+
+    const id = blog.id;
+
+    try {
+      const response = await blogService._delete(id);
+      console.log(response);
+      if (response.status === 204) {
+        setBlogs(blogs.filter((blog) => blog.id !== id));
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      props.handleNotification(
+        "Error",
+        "Something went wrong deleting the blog."
+      );
+    }
+  };
+
   const createNewRef = useRef();
 
   const blogForm = () => (
@@ -55,7 +82,13 @@ const Content = (props) => {
     <div>
       {blogForm()}
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} handleLike={addLike} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleDelete={deleteBlog}
+          handleLike={addLike}
+          user={props.user}
+        />
       ))}
     </div>
   );

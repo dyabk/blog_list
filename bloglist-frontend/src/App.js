@@ -60,7 +60,11 @@ const App = () => {
           </button>
         </p>
       </div>
-      <Content error={error} handleNotification={handleNotification} />
+      <Content
+        error={error}
+        handleNotification={handleNotification}
+        user={user}
+      />
     </div>
   );
 };
