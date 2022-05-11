@@ -33,12 +33,8 @@ const _delete = async (id) => {
     headers: { Authorization: token },
   };
 
-  console.log("Started deletion");
-
   try {
-    console.log("trying");
     const response = await axios.delete(`${baseUrl}/${id}`, config);
-    console.log(response);
     return response;
   } catch (error) {
     return {

@@ -1,13 +1,16 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const Blog = ({ blog, handleDelete, handleLike, user }) => {
-  const [detailsVisible, setDetailsVisible] = useState(false);
+  const [showFullInfo, setShowFullInfo] = useState(false);
+  const [buttonText, setButtonText] = useState("view");
 
-  const hideWhenVisible = { display: detailsVisible ? "none" : "" };
-  const showWhenVisible = { display: detailsVisible ? "" : "none" };
+  const toggleInfo = () => {
+    setButtonText(showFullInfo ? "view" : "hide");
+    setShowFullInfo(!showFullInfo);
+  };
 
   const deleteButton = () => {
-    if (user.username != blog.user.username) {
+    if (user.username !== blog.user.username) {
       return null;
     }
 
@@ -26,25 +29,29 @@ const Blog = ({ blog, handleDelete, handleLike, user }) => {
     marginBottom: 5,
   };
 
-  return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author}
-      <button style={hideWhenVisible} onClick={() => setDetailsVisible(true)}>
-        view
-      </button>
-      <button style={showWhenVisible} onClick={() => setDetailsVisible(false)}>
-        hide
-      </button>
-      <div style={showWhenVisible}>
-        {blog.url}
-        <br />
-        likes {blog.likes}
-        <button onClick={() => handleLike(blog.id)}>like</button>
-        <br />
-        {blog.user.name}
-        <br />
-        {deleteButton()}
+  const fullInfo = () => (
+    <div>
+      <div>{blog.url}</div>
+      <div>
+        Likes: {blog.likes}&nbsp;
+        <button className="button-like" onClick={() => handleLike(blog.id)}>
+          like
+        </button>
       </div>
+      <div>{blog.user.name}</div>
+      {deleteButton()}
+    </div>
+  );
+
+  return (
+    <div className="blog" style={blogStyle}>
+      <div>
+        {blog.title} {blog.author} &nbsp;
+        <button className="button-view" onClick={toggleInfo}>
+          {buttonText}
+        </button>
+      </div>
+      {showFullInfo ? fullInfo() : null}
     </div>
   );
 };
