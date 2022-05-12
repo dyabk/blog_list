@@ -40,11 +40,26 @@ describe("<Blog /> component", () => {
     );
     expect(div).not.toHaveTextContent("likes");
   });
+
+  test("after the button click, the blog's url and number of likes are displayed", () => {
+    const div = component.container.querySelector(".blog");
+    const button = component.getByText("view");
+    fireEvent.click(button);
+
+    expect(div).toHaveTextContent(
+      "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html"
+    );
+    expect(div).toHaveTextContent("Likes: ");
+  });
+
+  test("when the like button is clicked twice, the like handler is called twice", () => {
+    const viewButton = component.getByText("view");
+    fireEvent.click(viewButton);
+
+    const likeButton = component.getByText("like");
+    fireEvent.click(likeButton);
+    fireEvent.click(likeButton);
+
+    expect(handleLike.mock.calls).toHaveLength(2);
+  });
 });
-
-//let { container } = render(<Note note={note} />);
-
-//const div = container.querySelector(".note");
-//expect(div).toHaveTextContent(
-//  "Component testing is done with react-testing-library"
-//);

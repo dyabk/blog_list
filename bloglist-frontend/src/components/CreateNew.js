@@ -38,7 +38,7 @@ const CreateNew = (props) => {
   };
 
   return (
-    <div>
+    <div className="formDiv">
       <h2>Create new</h2>
       <form onSubmit={addBlog}>
         <div>
