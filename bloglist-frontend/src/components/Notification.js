@@ -9,7 +9,7 @@ const Notification = (props) => {
     background: "darkgray",
     borderRadius: 5,
     borderStyle: "solid",
-    color: props.error ? "orange" : "purple",
+    color: props.error ? "red" : "blue",
     fontSize: props.error ? 25 : 20,
     marginBottom: 10,
     padding: 10,

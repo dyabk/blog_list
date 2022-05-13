@@ -27,9 +27,9 @@ const LoginForm = (props) => {
 
   return (
     <div>
-      <h2>Log in to application</h2>
+      <h2>Log in to Bloglist</h2>
       <Notification error={props.error} message={props.message} />
-      <form onSubmit={handleLogin}>
+      <form id="form-login" onSubmit={handleLogin}>
         <div>
           <label htmlFor="input-username">Username</label>
           <input
