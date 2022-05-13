@@ -14,7 +14,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "server": "json-server -p3003 db.json",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
@@ -37,6 +39,7 @@
   "proxy": "http://localhost:3003",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.2.0"
+    "@testing-library/react": "^13.2.0",
+    "cypress": "^9.6.1"
   }
 }
