@@ -31,6 +31,46 @@ describe("Bloglist app", function () {
         .should("contain", "Wrong credentials")
         .and("have.css", "color", "rgb(255, 0, 0)")
         .and("have.css", "fontSize", "25px");
+
+      cy.get("html").should("not.contain", "Dimitri logged in");
+    });
+  });
+
+  describe("When logged in", function () {
+    beforeEach(function () {
+      cy.login({ username: "dimitri", password: "TechTonicShift513" });
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("create new post").click();
+      cy.get("#input-title").type("test title");
+      cy.get("#input-author").type("test author");
+      cy.get("#input-url").type("https://www.cypress.io/");
+      cy.get("#button-create").click();
+      cy.contains("test title test author");
+    });
+
+    it("The user can like a blog", function () {
+      cy.createBlog({
+        title: "test title1",
+        author: "test author1",
+        url: "test url1",
+      });
+      cy.createBlog({
+        title: "test title2",
+        author: "test author2",
+        url: "test url2",
+      });
+      cy.createBlog({
+        title: "test title3",
+        author: "test author3",
+        url: "test url3",
+      });
+
+      cy.contains("title2").parent().find("button").as("theButton");
+      cy.get("@theButton").click();
+      cy.contains("like").click();
+      cy.contains("Likes: 1");
     });
   });
 });
